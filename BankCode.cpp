@@ -163,6 +163,10 @@ public:
         }
     }
 
+    void saveNewBalance(Account account, int id){
+        accounts[id] = account;
+    }
+
     std::string getName(){
         return BankName;
     }
@@ -178,9 +182,11 @@ public:
 int main(){
     Bank bank = Bank("Bank of Tadiwa");
     int entry;
+    int accountNumber;
 
     do {
         std::cout << "Welcome to the " << bank.getName() << std::endl;
+        std::cout <<" "<<std::endl;
         std::cout << "1. Create a New Account" << std::endl;
         std::cout << "2. Display Account Info" << std::endl;
         std::cout << "3. Deposit Funds" << std::endl;
@@ -201,11 +207,24 @@ int main(){
                 break;
             }
             case 2: {
-                int accountNumber;
                 std::cout << "Enter Account Number: ";
                 std::cin >> accountNumber;
                 std::cout <<" "<<std::endl;
                 bank.displayAccountInformation(accountNumber);
+                break;
+            }
+            case 3: {
+                std::cout << "Enter Account Number: ";
+                std::cin >> accountNumber;
+                std::cout <<" "<<std::endl;
+                Account acc = bank.getAccount(accountNumber);
+                acc.deposit();
+                bank.saveNewBalance(acc, accountNumber);
+                break;
+            }
+            case 6: {
+                std::cout <<"Thanks for banking with the " << bank.getName();
+                std::cout <<" "<<std::endl;
                 break;
             }
             default:{
