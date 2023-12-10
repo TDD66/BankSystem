@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include <vector>
+#include <utility>
 #include <unordered_map>
 
 // Base class for Account
@@ -33,7 +33,7 @@ public:
 
     }
 
-    bool verifyPin(){
+    bool verifyPin() const{
         int pinAttempt;
         std::cout <<"Enter pin: ";
         std::cin >> pinAttempt;
@@ -91,7 +91,7 @@ public:
         }
     }
 
-    void printAccountInformation(Account account){
+    static void printAccountInformation(Account account){
         std::cout << "Account Number: " << account.getAccountNumber() << std::endl;
         std::cout << "Account Holder Name: " << account.getAccountHolderName() << std::endl;
         std::cout << "Account Balance: £" << account.getBalance() << std::endl;
@@ -164,7 +164,7 @@ public:
     }
 
     void saveNewBalance(Account account, int id){
-        accounts[id] = account;
+        accounts[id] = std::move(account);
     }
 
     std::string getName(){
@@ -219,6 +219,15 @@ int main(){
                 std::cout <<" "<<std::endl;
                 Account acc = bank.getAccount(accountNumber);
                 acc.deposit();
+                bank.saveNewBalance(acc, accountNumber);
+                break;
+            }
+            case 4:{
+                std::cout << "Enter Account Number: ";
+                std::cin >> accountNumber;
+                std::cout <<" "<<std::endl;
+                Account acc = bank.getAccount(accountNumber);
+                acc.withdraw();
                 bank.saveNewBalance(acc, accountNumber);
                 break;
             }
