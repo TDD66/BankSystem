@@ -98,10 +98,6 @@ public:
         std::cout <<" "<<std::endl;
     }
 
-    void closeAccount(){
-
-    }
-
     int getAccountNumber() const{
         return accountNumber;
     }
@@ -133,11 +129,15 @@ public:
     }
 
     void deleteAccount(int id){
-        bool flag = doesAccountExist(id);
-        if(flag) {
-            accounts.erase(id);
-            std::cout <<"Account " << id <<" successfully deleted." << std::endl;
-            std::cout <<" "<<std::endl;
+        bool acc_flag = doesAccountExist(id);
+        if(acc_flag) {
+            Account account = getAccount(id);
+            bool pin_flag =  account.verifyPin();
+            if(pin_flag) {
+                accounts.erase(id);
+                std::cout << "Account " << id << " successfully deleted." << std::endl;
+                std::cout << " " << std::endl;
+            }
         }
     }
 
@@ -192,7 +192,8 @@ int main(){
         std::cout << "3. Deposit Funds" << std::endl;
         std::cout << "4. Withdraw Funds" << std::endl;
         std::cout << "5. Delete Account" << std::endl;
-        std::cout << "6. Exit" << std::endl;
+        std::cout << "6. Admin Mode" << std::endl;
+        std::cout << "7. Exit" << std::endl;
         std::cout <<" "<<std::endl;
         std::cout << "Enter your choice: ";
         std::cin >> entry;
@@ -231,7 +232,18 @@ int main(){
                 bank.saveNewBalance(acc, accountNumber);
                 break;
             }
-            case 6: {
+            case 5:{
+                std::cout << "Enter Account Number: ";
+                std::cin >> accountNumber;
+                std::cout <<" "<<std::endl;
+                Account acc = bank.getAccount(accountNumber);
+                bank.deleteAccount(accountNumber);
+                break;
+            }
+            case 6:{
+
+            }
+            case 7: {
                 std::cout <<"Thanks for banking with the " << bank.getName();
                 std::cout <<" "<<std::endl;
                 break;
@@ -243,7 +255,7 @@ int main(){
         }
 
     }
-    while(entry != 6);
+    while(entry != 7);
 
     return 0;
 }
