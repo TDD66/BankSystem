@@ -4,44 +4,19 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
-class Bank{
-protected:
-    std::string BankName;
-    std::vector<int> account; // variable will hold account numbers and use them as identifiers.
-public:
-    explicit Bank(std::string bankname){
-        BankName = std::move(bankname);
-    }
-
-    // Add account to account vector and return the index as the id.
-    int addAccount(int account_number){
-        account.push_back(account_number);
-        return account.size() - 1;
-    }
-
-    void deleteAccount(int id){
-        account.erase(account.begin() + id);
-    }
-
-    std::string getName(){
-        return BankName;
-    }
-
-
-};
-
-class Account:Bank{
+// Base class for Account
+class Account{
 private:
     std::string accountHolderName;
     int accountNumber;
     int balance;
     int pin;
-    int id;
 
 public:
     // Constructor to create bank account
-    Account(): Bank(BankName){
+    Account(){
         std::cout <<"Enter your name: ";
         std::cin>> accountHolderName;
 
@@ -54,20 +29,23 @@ public:
         balance = 0;
         std::cout << "Your opening balance is £" << balance << std::endl;
 
-        // id will be used to find the bank account in the bank's storage.
-        id = addAccount(accountNumber);
+        std::cout <<" "<<std::endl;
+
     }
 
     bool verifyPin(){
         int pinAttempt;
         std::cout <<"Enter pin: ";
         std::cin >> pinAttempt;
+        std::cout <<" "<<std::endl;
 
         if(pinAttempt == pin){
             return true;
         }
         else{
             std::cout <<"Incorrect Pin" << std::endl;
+            std::cout <<" "<<std::endl;
+            return false;
         }
     }
 
@@ -81,9 +59,11 @@ public:
             std::cin >> deposit;
             balance += deposit;
             std::cout << "Your new balance is: £" << balance << std::endl;
+            std::cout <<" "<<std::endl;
         }
         else{
             std::cout << "Incorrect pin" << std::endl;
+            std::cout <<" "<<std::endl;
         }
     }
 
@@ -94,28 +74,110 @@ public:
             int withdraw; // withdrawal amount
             std::cout << "Enter withdraw amount: ";
             std::cin >> withdraw;
+            std::cout <<" "<<std::endl;
             if(withdraw > balance){
                 std::cout << "Insufficient Funds" << std::endl;
+                std::cout <<" "<<std::endl;
             }
             else {
                 balance -= withdraw;
                 std::cout << "Your new balance is: £" << balance << std::endl;
+                std::cout <<" "<<std::endl;
             }
         }
         else{
             std::cout << "Incorrect pin" << std::endl;
+            std::cout <<" "<<std::endl;
         }
+    }
+
+    void printAccountInformation(Account account){
+        std::cout << "Account Number: " << account.getAccountNumber() << std::endl;
+        std::cout << "Account Holder Name: " << account.getAccountHolderName() << std::endl;
+        std::cout << "Account Balance: £" << account.getBalance() << std::endl;
+        std::cout <<" "<<std::endl;
     }
 
     void closeAccount(){
 
     }
 
+    int getAccountNumber() const{
+        return accountNumber;
+    }
+
+    std::string getAccountHolderName(){
+        return accountHolderName;
+    }
+
+    int getBalance() const{
+        return balance;
+    }
+
 };
 
+// Base class for bank
+class Bank{
+private:
+    std::string BankName;
+    std::unordered_map<int,Account> accounts;
+public:
+    explicit Bank(std::string bankname){
+        BankName = std::move(bankname);
+    }
+
+    // Add account to account vector and return the index as the id.
+    void addAccount(const Account& account){
+        int id = account.getAccountNumber();
+        accounts.insert({id, account});
+    }
+
+    void deleteAccount(int id){
+        bool flag = doesAccountExist(id);
+        if(flag) {
+            accounts.erase(id);
+            std::cout <<"Account " << id <<" successfully deleted." << std::endl;
+            std::cout <<" "<<std::endl;
+        }
+    }
+
+    bool doesAccountExist(int id){
+        if(accounts.find(id) != accounts.end()){
+            return true;
+        }
+        else{
+            std::cout <<"Account not found!" << std::endl;
+            std::cout <<" "<<std::endl;
+            return false;
+        }
+    }
+
+    void displayAccountInformation(int id){
+        bool acc_flag = doesAccountExist(id);
+        if(acc_flag){
+            Account account = getAccount(id);
+            bool pin_flag = account.verifyPin();
+            if(pin_flag){
+                account.printAccountInformation(account);
+            }
+        }
+    }
+
+    std::string getName(){
+        return BankName;
+    }
+
+    Account getAccount(int id){
+        return accounts[id];
+    }
+
+
+};
+
+
 int main(){
-    Bank bank("Bank of Tadiwa");
-    int choice;
+    Bank bank = Bank("Bank of Tadiwa");
+    int entry;
 
     do {
         std::cout << "Welcome to the " << bank.getName() << std::endl;
@@ -125,15 +187,35 @@ int main(){
         std::cout << "4. Withdraw Funds" << std::endl;
         std::cout << "5. Delete Account" << std::endl;
         std::cout << "6. Exit" << std::endl;
+        std::cout <<" "<<std::endl;
         std::cout << "Enter your choice: ";
-        std::cin >> choice;
+        std::cin >> entry;
+        std::cout <<" "<<std::endl;
 
-        switch (choice) {
-            case 1:
-
+        switch (entry) {
+            case 1: {
+                Account acc = Account();
+                bank.addAccount(acc);
+                std::cout << "Account has been successfully created!" << std::endl;
+                std::cout <<" "<<std::endl;
+                break;
+            }
+            case 2: {
+                int accountNumber;
+                std::cout << "Enter Account Number: ";
+                std::cin >> accountNumber;
+                std::cout <<" "<<std::endl;
+                bank.displayAccountInformation(accountNumber);
+                break;
+            }
+            default:{
+                std::cout <<"Invalid choice, try again!" << std::endl;
+                std::cout <<" "<<std::endl;
+            }
         }
+
     }
-    while(true);
+    while(entry != 6);
 
     return 0;
 }
