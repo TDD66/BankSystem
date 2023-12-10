@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <utility>
 #include <vector>
 
 class Bank{
@@ -19,6 +18,14 @@ public:
     int addAccount(int account_number){
         account.push_back(account_number);
         return account.size() - 1;
+    }
+
+    void deleteAccount(int id){
+        account.erase(account.begin() + id);
+    }
+
+    std::string getName(){
+        return BankName;
     }
 
 
@@ -51,14 +58,25 @@ public:
         id = addAccount(accountNumber);
     }
 
-    // Deposits money into the bank account
-    void deposit(){
+    bool verifyPin(){
         int pinAttempt;
-        int deposit;
         std::cout <<"Enter pin: ";
         std::cin >> pinAttempt;
 
         if(pinAttempt == pin){
+            return true;
+        }
+        else{
+            std::cout <<"Incorrect Pin" << std::endl;
+        }
+    }
+
+    // Deposits money into the bank account
+    void deposit(){
+        bool flag = verifyPin();
+
+        if(flag){
+            int deposit;
             std::cout << "Enter deposit amount: ";
             std::cin >> deposit;
             balance += deposit;
@@ -70,17 +88,50 @@ public:
     }
 
     void withdraw(){
+        bool flag = verifyPin();
+
+        if(flag){
+            int withdraw; // withdrawal amount
+            std::cout << "Enter withdraw amount: ";
+            std::cin >> withdraw;
+            if(withdraw > balance){
+                std::cout << "Insufficient Funds" << std::endl;
+            }
+            else {
+                balance -= withdraw;
+                std::cout << "Your new balance is: £" << balance << std::endl;
+            }
+        }
+        else{
+            std::cout << "Incorrect pin" << std::endl;
+        }
+    }
+
+    void closeAccount(){
 
     }
 
 };
 
 int main(){
-    Bank bank("Bank");
+    Bank bank("Bank of Tadiwa");
+    int choice;
 
     do {
-        Account account1;
-        account1.deposit();
+        std::cout << "Welcome to the " << bank.getName() << std::endl;
+        std::cout << "1. Create a New Account" << std::endl;
+        std::cout << "2. Display Account Info" << std::endl;
+        std::cout << "3. Deposit Funds" << std::endl;
+        std::cout << "4. Withdraw Funds" << std::endl;
+        std::cout << "5. Delete Account" << std::endl;
+        std::cout << "6. Exit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+
+        }
     }
     while(true);
 
