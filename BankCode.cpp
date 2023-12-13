@@ -51,20 +51,27 @@ public:
 
     // Deposits money into the bank account
     void deposit(){
+
         bool flag = verifyPin();
 
-        if(flag){
+        if (flag) {
             int deposit;
             std::cout << "Enter deposit amount: ";
             std::cin >> deposit;
+            if(std::cin.fail()){
+                std::cin.clear();
+                std::cin.ignore();
+                std::cout <<"Invalid input, please use a number." << std::endl;
+                return;
+            }
             balance += deposit;
             std::cout << "Your new balance is: £" << balance << std::endl;
-            std::cout <<" "<<std::endl;
-        }
-        else{
+            std::cout << " " << std::endl;
+        } else {
             std::cout << "Incorrect pin" << std::endl;
-            std::cout <<" "<<std::endl;
+            std::cout << " " << std::endl;
         }
+
     }
 
     void withdraw(){
@@ -90,6 +97,8 @@ public:
             std::cout <<" "<<std::endl;
         }
     }
+
+
 
     static void printAccountInformation(Account account){
         std::cout << "Account Number: " << account.getAccountNumber() << std::endl;
@@ -253,6 +262,7 @@ int main(){
 
     int entry;
     int accountNumber;
+    bool flag;
 
     do {
         std::cout << "Welcome to the " << bank.getName() << std::endl;
@@ -281,33 +291,45 @@ int main(){
                 std::cout << "Enter Account Number: ";
                 std::cin >> accountNumber;
                 std::cout <<" "<<std::endl;
-                bank.displayAccountInformation(accountNumber);
+                flag = bank.doesAccountExist(accountNumber);
+                if(flag) {
+                    bank.displayAccountInformation(accountNumber);
+                }
                 break;
             }
             case 3: {
                 std::cout << "Enter Account Number: ";
                 std::cin >> accountNumber;
                 std::cout <<" "<<std::endl;
-                Account acc = bank.getAccount(accountNumber);
-                acc.deposit();
-                bank.saveNewBalance(acc, accountNumber);
+                flag = bank.doesAccountExist(accountNumber);
+                if(flag) {
+                    Account acc = bank.getAccount(accountNumber);
+                    acc.deposit();
+                    bank.saveNewBalance(acc, accountNumber);
+                }
                 break;
             }
             case 4:{
                 std::cout << "Enter Account Number: ";
                 std::cin >> accountNumber;
                 std::cout <<" "<<std::endl;
-                Account acc = bank.getAccount(accountNumber);
-                acc.withdraw();
-                bank.saveNewBalance(acc, accountNumber);
+                flag = bank.doesAccountExist(accountNumber);
+                if(flag) {
+                    Account acc = bank.getAccount(accountNumber);
+                    acc.withdraw();
+                    bank.saveNewBalance(acc, accountNumber);
+                }
                 break;
             }
             case 5:{
                 std::cout << "Enter Account Number: ";
                 std::cin >> accountNumber;
                 std::cout <<" "<<std::endl;
-                Account acc = bank.getAccount(accountNumber);
-                bank.deleteAccount(accountNumber);
+                flag = bank.doesAccountExist(accountNumber);
+                if(flag) {
+                    Account acc = bank.getAccount(accountNumber);
+                    bank.deleteAccount(accountNumber);
+                }
                 break;
             }
             case 6:{
