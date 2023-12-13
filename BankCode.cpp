@@ -57,19 +57,23 @@ public:
         if (flag) {
             int deposit;
             std::cout << "Enter deposit amount: ";
-            std::cin >> deposit;
-            if(std::cin.fail()){
-                std::cin.clear();
-                std::cin.ignore();
-                std::cout <<"Invalid input, please use a number." << std::endl;
-                return;
+            // Loop until valid input is received
+            while (!(std::cin >> deposit)) {
+                std::cin.clear(); // Clear error flags
+
+                // Discard invalid input
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                // Prompt user for valid input
+                std::cout << "Invalid input. Please enter a valid amount: ";
             }
+
+            // Process valid input
             balance += deposit;
             std::cout << "Your new balance is: £" << balance << std::endl;
             std::cout << " " << std::endl;
         } else {
-            std::cout << "Incorrect pin" << std::endl;
-            std::cout << " " << std::endl;
+            return;
         }
 
     }
