@@ -158,7 +158,7 @@ public:
             Account account = getAccount(id);
             bool pin_flag = account.verifyPin();
             if(pin_flag){
-                account.printAccountInformation(account);
+                Account::printAccountInformation(account);
             }
         }
     }
@@ -175,12 +175,83 @@ public:
         return accounts[id];
     }
 
+    friend class Admin;
+};
+
+/*Admin class that will have access to all the information about the accounts and bank
+it is a friend of bank because it should have access to everything in the bank.*/
+
+class Admin{
+private:
+    std::string name;
+    std::string password;
+public:
+    Admin() {
+        std::cout << "Enter Admin Name: ";
+        std::cin >> name;
+
+        std::cout << "Set Admin Password(KEEP A NOTE OF PASSWORD): ";
+        std::cin >> password;
+        std::cout << " " << std::endl;
+    }
+
+    bool checkPassword(){
+        std::string p;
+        std::cout <<"Enter admin password: ";
+        std::cin >> p;
+
+        if(p == password){
+            return true;
+        }
+        else {
+            std::cout <<"Incorrect Password!";
+            return false;
+        }
+    }
+
+    void displayAccounts(Bank& bank){
+        bool flag = checkPassword();
+        if(flag){
+            std::unordered_map<int, Account> mp = bank.accounts;
+            printAllAccounts(mp);
+        }
+    }
+
+    static void printAllAccounts(const std::unordered_map<int, Account>& accmap){
+        for(const auto& i : accmap){
+            printAccount(i.first, i.second);
+        }
+    }
+
+    void findAccount(Bank& bank, int id){
+        bool p_flag = checkPassword();
+        if(p_flag) {
+            bool flag = bank.doesAccountExist(id);
+            if (flag) {
+                Account acc = bank.getAccount(id);
+                std::cout << "Account Found:" << std::endl << std::endl;
+                printAccount(id, acc);
+            } else {
+                std::cout << "Account Not Found!" << std::endl;
+            }
+        }
+    }
+
+    static void printAccount(const int k, Account acc){
+        std::cout <<"Account Number:      " << k <<std::endl;
+        std::cout <<"Account Holder Name: " << acc.getAccountHolderName() << std::endl;
+        std::cout <<"Balance:             " << acc.getBalance() << std::endl;
+        std::cout << " " << std::endl;
+    }
+
 
 };
 
 
 int main(){
     Bank bank = Bank("Bank of Tadiwa");
+    Admin admin = Admin();
+
     int entry;
     int accountNumber;
 
@@ -241,6 +312,32 @@ int main(){
                 break;
             }
             case 6:{
+                int adm_entry;
+                std::cout << "1. Display Accounts" << std::endl;
+                std::cout << "2. Find Account" << std::endl;
+                std::cout << "3. Exit Admin Mode" << std::endl << std::endl;
+                std::cout << "Enter your choice: ";
+                std::cin >> adm_entry;
+                switch (adm_entry) {
+                    case 1:{
+                        admin.displayAccounts(bank);
+                        break;
+                    }
+                    case 2:{
+                        int id;
+                        std::cout <<"Enter Account Number: ";
+                        std::cin >> id;
+                        admin.findAccount(bank, id);
+                        break;
+                    }
+                    case 3:{
+                        break;
+                    }
+                    default:{
+                        std::cout <<"Invalid Entry, try again." << std::endl << std::endl;
+                        break;
+                    }
+                }
 
             }
             case 7: {
