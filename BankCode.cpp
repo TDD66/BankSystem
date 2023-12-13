@@ -175,11 +175,12 @@ public:
         return accounts[id];
     }
 
-    friend class Admin;
+    std::unordered_map<int, Account> getAllAccounts(){
+        return accounts;
+    }
 };
 
-/*Admin class that will have access to all the information about the accounts and bank
-it is a friend of bank because it should have access to everything in the bank.*/
+// Admin class
 
 class Admin{
 private:
@@ -212,7 +213,7 @@ public:
     void displayAccounts(Bank& bank){
         bool flag = checkPassword();
         if(flag){
-            std::unordered_map<int, Account> mp = bank.accounts;
+            std::unordered_map<int, Account> mp = bank.getAllAccounts();
             printAllAccounts(mp);
         }
     }
@@ -243,8 +244,6 @@ public:
         std::cout <<"Balance:             " << acc.getBalance() << std::endl;
         std::cout << " " << std::endl;
     }
-
-
 };
 
 
