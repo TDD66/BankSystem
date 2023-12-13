@@ -84,7 +84,18 @@ public:
         if(flag){
             int withdraw; // withdrawal amount
             std::cout << "Enter withdraw amount: ";
-            std::cin >> withdraw;
+
+            // Loop until valid input is received
+            while(!(std::cin >> withdraw)){
+                std::cin.clear(); // Clear error flags
+
+                // Discard invalid input
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                // Prompt user for valid input
+                std::cout << "Invalid input. Please enter a valid amount: ";
+            }
+            // Process valid input
             std::cout <<" "<<std::endl;
             if(withdraw > balance){
                 std::cout << "Insufficient Funds" << std::endl;
@@ -363,7 +374,7 @@ int main(){
                         break;
                     }
                 }
-
+                break;
             }
             case 7: {
                 std::cout <<"Thanks for banking with the " << bank.getName();
