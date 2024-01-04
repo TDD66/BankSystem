@@ -4,7 +4,7 @@ This is a basic terminal-based banking system implemented in C++. It allows user
 
 ## Getting Started
 
-To run the program, ensure you have a C++ compiler installed. You can compile and execute the program using the following steps:
+To run the program, ensure you have a C++ compiler (C++ 14) installed. You can compile and execute the program using the following steps:
 
 1. **Clone the repository:**
     ```bash
@@ -14,7 +14,7 @@ To run the program, ensure you have a C++ compiler installed. You can compile an
 
 2. **Compile the code:**
     ```bash
-    g++ BankCode.cpp -o banking_system
+    g++ -std=c++14 BankCode.cpp -o banking_system
     ```
 
 3. **Run the program:**
