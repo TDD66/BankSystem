@@ -8,13 +8,13 @@ To run the program, ensure you have a C++ compiler installed. You can compile an
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/your-repo.git
-    cd your-repo
+    git clone https://github.com/TDD66/BankSystem.git
+    cd BankSystem
     ```
 
 2. **Compile the code:**
     ```bash
-    g++ -o banking_system main.cpp
+    g++ BankCode.cpp -o banking_system
     ```
 
 3. **Run the program:**
